@@ -124,7 +124,7 @@ namespace Lesson_203
 
             if (ReadBuffer[0] != BMP280_Signature)
             {
-                Debug.WriteLine("BMP280::begin Signature MISMATCH!!!!!!!!!!!!!!!!!");
+                Debug.WriteLine("BMP280::begin Signature MISMATCH!");
                 return;
             }
 
