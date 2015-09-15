@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Net.Http;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -15,11 +16,14 @@ namespace Lesson_203
     public sealed partial class MainPage : Page
     {
         BMP280 BMP280 = new BMP280();
+        HttpClient httpClient = new HttpClient();
+        static DispatcherTimer readDataTimer;
+
         public MainPage()
         {
             this.InitializeComponent();
         }
-        BMP280_Data data;
+
         protected override async void OnNavigatedTo(NavigationEventArgs navArgs)
         {
             Debug.WriteLine("MainPage::OnNavigatedTo");
@@ -32,30 +36,36 @@ namespace Lesson_203
                 Debug.WriteLine(e.Message);
             }
 
-            data = await BMP280.Read();
-            OnReadButtonClick(null, null);
+            readDataTimer = new DispatcherTimer();
+            readDataTimer.Interval = TimeSpan.FromSeconds(1);
+            readDataTimer.Tick += readDataTimer_Tick;
+            readDataTimer.Start();
         }
 
-        private async void OnReadButtonClick(object sender, RoutedEventArgs e)
+        private async void readDataTimer_Tick(object sender, object e)
         {
             float temp = 0;
             float pressure = 0;
             float altitude = 0;
             float seaLevelPressure = 1013.25f; //TODO: Update this based on your local sea level pressure (Unit: Hectopascal)
-            for (int i = 0; i < 10; i++)
+
+            temp = await BMP280.ReadTemperature();
+            Debug.WriteLine("Temperature: " + temp.ToString() + " deg C");
+
+            pressure = await BMP280.ReadPreasure();
+            Debug.WriteLine("Pressure: " + pressure.ToString() + " Pa");
+
+            altitude = await BMP280.ReadAltitude(seaLevelPressure);
+            Debug.WriteLine("Altitude: " + altitude.ToString() + " m");
+            var data = new FormUrlEncodedContent(new[]
             {
-                temp = await BMP280.ReadTemperature();
-                Debug.WriteLine("Temperature: " + temp.ToString() + " deg C");
-
-                pressure = await BMP280.ReadPreasure();
-                Debug.WriteLine("Pressure: " + pressure.ToString() + " Pa");
-
-                altitude = await BMP280.ReadAltitude(seaLevelPressure);
-                Debug.WriteLine("Altitude: " + altitude.ToString() + " m");
-
-                await Task.Delay(100);
-            }
-
+                    new KeyValuePair<string, string>("Lesson", "203"),
+                    new KeyValuePair<string, string>("Temperature" , temp.ToString() + " deg C"),
+                    new KeyValuePair<string, string>("Pressure", pressure.ToString() + " Pa"),
+                    new KeyValuePair<string, string>("Altitude", altitude.ToString() + " m")
+            });
+            var response = await httpClient.PostAsync("http://adafruitsample.azurewebsites.net/api", data);
+            response.EnsureSuccessStatusCode();
         }
     }
 }
