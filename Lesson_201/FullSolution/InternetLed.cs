@@ -1,6 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 
@@ -12,8 +15,6 @@ namespace Lesson_201
     /// </summary>
     class InternetLed
     {
-        const string WebAPIURL = "http://adafruitsample.azurewebsites.net/api?Lesson=201";
-
         // GPIO controller code
         private GpioController gpio;
         private GpioPin LedControlGPIOPin;
@@ -71,20 +72,36 @@ namespace Lesson_201
         // return an eLedState value
         // millisecond value > 5 = eLedState.On
         // anything else = eLedState.off 
+        //const string WebAPIURL = "http://adafruitsample.azurewebsites.net";
+        const string WebAPIURL = "http://10.125.149.194:3000";
         public async Task<eLedState> MakeWebApiCall()
         {
             Debug.WriteLine("InternetLed::MakeWebApiCall");
             eLedState computedLedState = eLedState.On;
 
-            // Prepare the web API call
-            WebRequest request = WebRequest.Create(WebAPIURL);
+            string responseString = "No response";
 
-            // Wait for the response notification
-            WebResponse response = await request.GetResponseAsync();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    FormUrlEncodedContent data = new FormUrlEncodedContent(new[]
+                    {
+                        new KeyValuePair<string, string>("Lesson", "201")
+                    });
+                    var response = await client.PostAsync(WebAPIURL, data);
 
-            // Read the response string into memory.
-            StreamReader streamReader = new StreamReader(response.GetResponseStream());
-            string responseString = streamReader.ReadToEnd();
+                    response.EnsureSuccessStatusCode();
+
+                    responseString = await response.Content.ReadAsStringAsync();
+
+                    Debug.WriteLine(responseString);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
 
             if (responseString[19] > '5')
             {
