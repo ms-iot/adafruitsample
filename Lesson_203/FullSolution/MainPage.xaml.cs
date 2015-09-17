@@ -19,8 +19,6 @@ namespace Lesson_203
         BMP280 BMP280;
         //A web client for making web API calls
         HttpClient httpClient;
-        //A timer to read the sensor data regularly
-        static DispatcherTimer readDataTimer;
 
         public MainPage()
         {
@@ -38,61 +36,47 @@ namespace Lesson_203
                 //Initialize the sensor
                 await BMP280.Initialize();
 
-                //Create a new web
+                //Create a new web client
                 httpClient = new HttpClient();
 
-                //Create a new timer
-                readDataTimer = new DispatcherTimer();
-                //Set the timer to run at 1 second intervals
-                readDataTimer.Interval = TimeSpan.FromSeconds(1);
-                //Set the function that is called at every interval
-                readDataTimer.Tick += readDataTimer_Tick;
-                //Start the timer
-                readDataTimer.Start();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-        }
+                //Create variables to store the sensor data: temperature, pressure and altitude. 
+                //Initialize them to 0.
+                float temp = 0;
+                float pressure = 0;
+                float altitude = 0;
 
-        //This method will be called at regular intervals to read sensor data and send it to the web API
-        private async void readDataTimer_Tick(object sender, object e)
-        {
-            //Create variables to store the sensor data: temperature, pressure and altitude. Initialize them to 0.
-            float temp = 0;
-            float pressure = 0;
-            float altitude = 0;
+                //Create a constant for pressure at sea level. 
+                //This is based on your local sea level pressure (Unit: Hectopascal)
+                const float seaLevelPressure = 1013.25f;
 
-            //Create a constant for pressure at sea level. This is based on your local sea level pressure (Unit: Hectopascal)
-            const float seaLevelPressure = 1013.25f;
-
-            try {
-                //Read the temperature and write the value to your debug console
-                temp = await BMP280.ReadTemperature();
-                Debug.WriteLine("Temperature: " + temp.ToString() + " deg C");
-
-                //Read the pressure and write the value to your debug console
-                pressure = await BMP280.ReadPreasure();
-                Debug.WriteLine("Pressure: " + pressure.ToString() + " Pa");
-
-                //Read the altitude and write the value to your debug console
-                altitude = await BMP280.ReadAltitude(seaLevelPressure);
-                Debug.WriteLine("Altitude: " + altitude.ToString() + " m");
+                //Read 10 samples of the data
+                for(int i = 0; i < 10; i++)
+                {
+                    temp += await BMP280.ReadTemperature();
+                    pressure += await BMP280.ReadPreasure(); 
+                    altitude += await BMP280.ReadAltitude(seaLevelPressure);
+                }
+                
+                //Write the average values to your debug console
+                Debug.WriteLine("Temperature: " + (temp/10).ToString() + " deg C");
+                Debug.WriteLine("Pressure: " + (pressure/10).ToString() + " Pa");
+                Debug.WriteLine("Altitude: " + (altitude/10).ToString() + " m");
 
                 //Create the grouped content to send to the web API
                 FormUrlEncodedContent data = new FormUrlEncodedContent(new[]
                 {
-                    new KeyValuePair<string, string>("Lesson", "203"),
-                    new KeyValuePair<string, string>("Temperature" , temp.ToString() + " deg C"),
-                    new KeyValuePair<string, string>("Pressure", pressure.ToString() + " Pa"),
-                    new KeyValuePair<string, string>("Altitude", altitude.ToString() + " m")
+                    new KeyValuePair<string, string>("Lesson", "202"),
+                    new KeyValuePair<string, string>("Temperature", (temp/10).ToString() + " deg C"),
+                    new KeyValuePair<string, string>("Pressure", (pressure/10).ToString() + " Pa"),
+                    new KeyValuePair<string, string>("Altitude", (altitude/10).ToString() + " m")
                 });
 
                 //Create a response message to post the data
-                HttpResponseMessage response = await httpClient.PostAsync("http://adafruitsample.azurewebsites.net/api", data);
+                HttpResponseMessage response = await httpClient.PostAsync(
+                                                    "http://adafruitsample.azurewebsites.net/api", data);
                 //Ensure the data was posted successfully
                 response.EnsureSuccessStatusCode();
+
             }
             catch (Exception ex)
             {

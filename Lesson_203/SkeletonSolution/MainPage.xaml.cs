@@ -16,10 +16,9 @@ namespace Lesson_203
     public sealed partial class MainPage : Page
     {
         //A class which wraps the barometric sensor
-
+        
         //A web client for making web API calls
-
-        //A timer to read the sensor data regularly
+        
 
         public MainPage()
         {
@@ -33,49 +32,33 @@ namespace Lesson_203
             try
             {
                 //Create a new object for our barometric sensor class
-
+                
                 //Initialize the sensor
+                
 
-                //Create a new web
+                //Create a new web client                
 
-                //Create a new timer
+                //Create variables to store the sensor data: temperature, pressure and altitude. 
+                //Initialize them to 0.
+               
 
-                //Set the timer to run at 1 second intervals
+                //Create a constant for pressure at sea level. 
+                //This is based on your local sea level pressure (Unit: Hectopascal)
+                
 
-                //Set the function that is called at every interval
+                //Read 10 samples of the data
+                
 
-                //Start the timer
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-        }
-
-        //This method will be called at regular intervals to read sensor data and send it to the web API
-        private async void readDataTimer_Tick(object sender, object e)
-        {
-            //Create variables to store the sensor data: temperature, pressure and altitude. 
-            //Initialize them to 0.         
-
-
-            //Create a constant for pressure at sea level. 
-            //This is based on your local sea level pressure (Unit: Hectopascal)
-
-
-            try {
-                //Read the temperature and write the value to your debug console
-
-                //Read the pressure and write the value to your debug console
-
-                //Read the altitude and write the value to your debug console
+                //Write the average values to your debug console
+                
 
                 //Create the grouped content to send to the web API
+                
 
                 //Create a response message to post the data
-
+                
                 //Ensure the data was posted successfully
+                
 
             }
             catch (Exception ex)
