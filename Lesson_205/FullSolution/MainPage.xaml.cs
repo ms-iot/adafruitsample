@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Net.Http;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.Devices.Gpio;
@@ -33,6 +34,9 @@ namespace Lesson_205
 
         protected override async void OnNavigatedTo(NavigationEventArgs navArgs)
         {
+            // This will get our pin on the world map showing everyone we are running the sample.
+            MakeWebAPICall();
+
             try
             {
                 //Create a new object for the color sensor class
@@ -45,7 +49,7 @@ namespace Lesson_205
 
                 //Create a new MediaElement
                 audio = new MediaElement();
-                
+
                 //Initialize the GPIO pin for the pushbutton
                 InitializeGpio();
             }
@@ -63,7 +67,7 @@ namespace Lesson_205
             //Use the controller to open the gpio pin of given number
             buttonPin = gpioController.OpenPin(gpioPin);
             //Debounce the pin to prevent unwanted button pressed events
-            buttonPin.DebounceTimeout  = new TimeSpan(1000);
+            buttonPin.DebounceTimeout = new TimeSpan(1000);
             //Set the pin for input
             buttonPin.SetDriveMode(GpioPinDriveMode.Input);
             //Set a function callback in the event of a value change
@@ -87,7 +91,7 @@ namespace Lesson_205
         private async Task SpeakColor(string colorRead)
         {
             //Create a SpeechSynthesisStream using a string
-            var stream = await synthesizer.SynthesizeTextToStreamAsync("I think the color is " + colorRead);
+            var stream = await synthesizer.SynthesizeTextToStreamAsync("The color appears to be " + colorRead);
             //Use a dispatcher to play the audio
             var ignored = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -96,6 +100,12 @@ namespace Lesson_205
                 //Play the stream
                 audio.Play();
             });
+        }
+
+        public void MakeWebAPICall()
+        {
+            HttpClient client = new HttpClient();
+            client.GetStringAsync("http://adafruitsample.azurewebsites.net/api?Lesson=205");
         }
     }
 }
