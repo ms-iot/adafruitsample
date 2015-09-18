@@ -20,7 +20,7 @@ namespace Lesson_204
         const byte MCP3008_Differential = 0x00;
 
         // These are used when we calculate the voltage from the ADC units
-        float ReferenceVolgate;
+        float ReferenceVoltage;
         public const uint Min = 0;
         public const uint Max = 1023;
 
@@ -30,7 +30,7 @@ namespace Lesson_204
             Debug.WriteLine("MCP3008::New MCP3008");
 
             // Store the reference voltage value for later use in the voltage calculation.
-            ReferenceVolgate = referenceVolgate;
+            ReferenceVoltage = referenceVolgate;
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Lesson_204
         /// <returns>The computed voltage based on the reference voltage</returns>
         public float ADCToVoltage(int adc)
         {
-            return (float)adc * ReferenceVolgate / (float)Max;
+            return (float)adc * ReferenceVoltage / (float)Max;
         }
     }
 }
