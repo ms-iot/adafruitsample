@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,40 +27,49 @@ namespace Lesson_204
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        const float ReferenceVoltage = 3.3F;
+        // Use for configuration of the MCP3008 class voltage formula
+        const float ReferenceVoltage = 5.0F;
+
+        // Values for which channels we will be using from the ADC chip
         const byte LowPotentiometerADCChannel = 0;
         const byte HighPotentiometerADCChannel = 1;
         const byte CDSADCChannel = 2;
+
+        // Some strings to let us know the current state.
         const string JustRightLightString = "Ah, just right";
         const string LowLightString = "I need a light";
         const string HighLightString = "I need to wear shades";
 
+        // Some internal state information
         enum eState { unknown, JustRight, TooBright, TooDark};
         eState CurrentState = eState.unknown;
 
+        // Our ADC Chip class
         MCP3008 mcp3008 = new MCP3008(ReferenceVoltage);
 
-
+        // The Windows Speech API interface
         private SpeechSynthesizer synthesizer;
 
-
+        // A timer to control how often we check the ADC values.
         public Timer timer;
 
         public MainPage()
         {
             this.InitializeComponent();
 
+            // Create a new SpeechSynthesizer instance for later use.
             synthesizer = new SpeechSynthesizer();
 
+            // Initialize the ADC chip for use
             mcp3008.Initialize();
         }
-
-
-
 
         protected override void OnNavigatedTo(NavigationEventArgs navArgs)
         {
             Debug.WriteLine("MainPage::OnNavigatedTo");
+
+            // This will get our pin on the world map showing everyone we are running the sample.
+            MakeWebAPICall();
 
             // We will check for light level changes once per second (1000 milliseconds)
             timer = new Timer(timerCallback, this, 0, 1000);
@@ -73,41 +83,43 @@ namespace Lesson_204
                 Debug.WriteLine("MainPage::timerCallback not ready");
                 return;
             }
-            int lowPotReadVal;
-            int highPotReadVal;
-            int cdsReadVal;
-            float lowPotVoltage;
-            float highPotVoltage;
-            float cdsVoltage;
 
+            // The new light state, assume it's just right to start.
             eState newState = eState.JustRight;
 
-            lowPotReadVal = await mcp3008.ReadADC(LowPotentiometerADCChannel);
-            highPotReadVal = await mcp3008.ReadADC(HighPotentiometerADCChannel);
-            cdsReadVal = await mcp3008.ReadADC(CDSADCChannel);
+            // Read from the ADC chip the current values of the two pots and the photo cell.
+            int lowPotReadVal = mcp3008.ReadADC(LowPotentiometerADCChannel);
+            int highPotReadVal = mcp3008.ReadADC(HighPotentiometerADCChannel);
+            int cdsReadVal = mcp3008.ReadADC(CDSADCChannel);
 
-            lowPotVoltage = mcp3008.ADCToVoltage(lowPotReadVal);
-            highPotVoltage = mcp3008.ADCToVoltage(highPotReadVal);
-            cdsVoltage = mcp3008.ADCToVoltage(cdsReadVal);
+            // convert the ADC readings to voltages to make them more friendly.
+            float lowPotVoltage = mcp3008.ADCToVoltage(lowPotReadVal);
+            float highPotVoltage = mcp3008.ADCToVoltage(highPotReadVal);
+            float cdsVoltage = mcp3008.ADCToVoltage(cdsReadVal);
 
+            // Let us know what was read in.
             Debug.WriteLine(String.Format("Read values {0}, {1}, {2} ", lowPotReadVal, highPotReadVal, cdsReadVal));
             Debug.WriteLine(String.Format("Voltages {0}, {1}, {2} ", lowPotVoltage, highPotVoltage, cdsVoltage));
 
+            // Compute the new state by first checking if the light level is too low
             if (cdsVoltage < lowPotVoltage)
             {
                 newState = eState.TooDark;
             }
 
+            // And now check if it too high.
             if (cdsVoltage > highPotVoltage)
             {
                 newState = eState.TooBright;
             }
 
+            // Use another method to determine what to do with the state.
             await CheckForStateChange(newState);
         }
 
         private async Task CheckForStateChange(eState newState)
         {
+            // Checks for state changes and does something when one is detected.
             if (newState != CurrentState)
             {
                 String whatToSay;
@@ -137,10 +149,12 @@ namespace Lesson_204
                             whatToSay = "unexpected value";
                         }
                         break;
-
                 }
 
+                // Use another method to wrap the speech synthesis functionality.
                 await TextToSpeech(whatToSay);
+
+                // Update the current state for next time.
                 CurrentState = newState;
             }
         }
@@ -150,33 +164,30 @@ namespace Lesson_204
             Debug.WriteLine(String.Format("MainPage::TextToSpeech {0}", textToSpeak));
             // Because we are running somewhere other than the UI thread and we need to talk to a UI element (the media control)
             // we need to use the dispatcher to move the calls to the right thread.
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High,
-            async () =>
-            {
-                SpeechSynthesisStream synthesisStream;
-                try
+            await Dispatcher.RunAsync(
+                Windows.UI.Core.CoreDispatcherPriority.High,
+                async () =>
                 {
-                    //creating a stream from the text which can be played using media element. This new API converts text input into a stream.
+                    SpeechSynthesisStream synthesisStream;
+
+                    //creating a stream from the text which can be played using media element. This API converts text input into a stream.
                     synthesisStream = await synthesizer.SynthesizeTextToStreamAsync(textToSpeak);
-                }
-                catch (Exception)
-                {
-                    synthesisStream = null;
-                }
-                // if the SSML stream is not in the correct format throw an error message to the user
-                if (synthesisStream == null)
-                {
-                    Debug.WriteLine("unable to synthesize text");
-                    return;
-                }
 
-                // start this audio stream playing
-                media.AutoPlay = true;
-                media.SetSource(synthesisStream, synthesisStream.ContentType);
-                media.Play();
-            }
+                    // start this audio stream playing
+                    media.AutoPlay = true;
+                    media.SetSource(synthesisStream, synthesisStream.ContentType);
+                    media.Play();
+                }
             );
-
         }
+
+        // This will put our pin on the world map of makers
+        // Go to ENTER FINAL LINK HERE to view your pin
+        public void MakeWebAPICall()
+        {
+            HttpClient client = new HttpClient();
+            client.GetStringAsync("http://adafruitsample.azurewebsites.net/api?Lesson=204");
+        }
+
     }
 }
