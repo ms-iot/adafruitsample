@@ -17,15 +17,15 @@ namespace Lesson_205
     public sealed partial class MainPage : Page
     {
         //A class which wraps the color sensor
-        TCS34725 colorSensor;
+        
         //A SpeechSynthesizer class for text to speech operations
-        SpeechSynthesizer synthesizer;
+        
         //A MediaElement class for playing the audio
-        MediaElement audio;
+        
         //A GPIO pin for the pushbutton
-        GpioPin buttonPin;
+        
         //The GPIO pin number we want to use to control the pushbutton
-        int gpioPin = 4;
+       
         public MainPage()
         {
             this.InitializeComponent();
@@ -36,18 +36,18 @@ namespace Lesson_205
             try
             {
                 //Create a new object for the color sensor class
-                colorSensor = new TCS34725();
+                
                 //Initialize the sensor
-                await colorSensor.Initialize();
+             
 
                 //Create a new SpeechSynthesizer
-                synthesizer = new SpeechSynthesizer();
+               
 
                 //Create a new MediaElement
-                audio = new MediaElement();
+                
                 
                 //Initialize the GPIO pin for the pushbutton
-                InitializeGpio();
+              
             }
             catch (Exception e)
             {
@@ -59,15 +59,15 @@ namespace Lesson_205
         private void InitializeGpio()
         {
             //Create a default GPIO controller
-            GpioController gpioController = GpioController.GetDefault();
+            
             //Use the controller to open the gpio pin of given number
-            buttonPin = gpioController.OpenPin(gpioPin);
+          
             //Debounce the pin to prevent unwanted button pressed events
-            buttonPin.DebounceTimeout  = new TimeSpan(1000);
+     
             //Set the pin for input
-            buttonPin.SetDriveMode(GpioPinDriveMode.Input);
+   
             //Set a function callback in the event of a value change
-            buttonPin.ValueChanged += buttonPin_ValueChanged;
+
         }
 
         //This method will be called everytime there is a change in the GPIO pin value
@@ -77,9 +77,9 @@ namespace Lesson_205
             if (e.Edge == GpioPinEdge.RisingEdge)
             {
                 //Read the approximate color from the sensor
-                string colorRead = await colorSensor.getClosestColor();
+               
                 //Output the colr name to the speaker
-                await SpeakColor(colorRead);
+               
             }
         }
 
@@ -87,14 +87,14 @@ namespace Lesson_205
         private async Task SpeakColor(string colorRead)
         {
             //Create a SpeechSynthesisStream using a string
-            var stream = await synthesizer.SynthesizeTextToStreamAsync("I think the color is " + colorRead);
+          
             //Use a dispatcher to play the audio
             var ignored = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 //Set the souce of the MediaElement to the SpeechSynthesisStream
-                audio.SetSource(stream, stream.ContentType);
+               
                 //Play the stream
-                audio.Play();
+               
             });
         }
     }
