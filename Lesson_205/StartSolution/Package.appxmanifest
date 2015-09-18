@@ -8,14 +8,14 @@
 
   <Identity
     Name="71e3c19c-643f-439e-afa4-ded6c661fa24"
-    Publisher="CN=apdutta"
+    Publisher="CN=Microsoft"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="71e3c19c-643f-439e-afa4-ded6c661fa24" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Lesson_205</DisplayName>
-    <PublisherDisplayName>apdutta</PublisherDisplayName>
+    <PublisherDisplayName>Microsoft</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

@@ -225,6 +225,7 @@ namespace Lesson_203
                 Debug.WriteLine("BMP280_compensate_P_Int64 Jump out to avoid / 0");
                 return 0; //Avoid exception caused by division by zero
             }
+            //Perform calibration operations as per datasheet: http://www.adafruit.com/datasheets/BST-BMP280-DS001-11.pdf
             p = 1048576 - adc_P;
             p = (((p << 31) - var2) * 3125) / var1;
             var1 = ((Int64)CalibrationData.dig_P9 * (p >> 13) * (p >> 13)) >> 25;
@@ -275,7 +276,7 @@ namespace Lesson_203
             //Convert the pressure to Hectopascals(hPa)
 
             //Calculate and return the altitude using the international barometric formula
-            //h = 44330 * [ 1 - ( p / p0 ) ^ ( 1 / 5.255) ]
+
             return 0;
         }
     }
