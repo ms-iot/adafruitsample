@@ -72,7 +72,7 @@ namespace Lesson_201
         // return an eLedState value
         // millisecond value > 5 = eLedState.On
         // anything else = eLedState.off 
-        const string WebAPIURL = "http://adafruitsample.azurewebsites.net/api?Lesson=201";
+        const string WebAPIURL = "http://adafruitsample.azurewebsites.net/TimeApi";
         public async Task<eLedState> MakeWebApiCall()
         {
             Debug.WriteLine("InternetLed::MakeWebApiCall");

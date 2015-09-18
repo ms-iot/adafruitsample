@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -14,7 +15,7 @@ namespace Lesson_201
     public sealed partial class MainPage : Page
     {
         // which GPIO pin do we want to use to control the LED light
-        const int GPIOToUse = 27;
+        const int GPIOToUse = 18;
 
         // The class which wraps our LED.
         InternetLed internetLed;
@@ -28,6 +29,8 @@ namespace Lesson_201
         protected override async void OnNavigatedTo(NavigationEventArgs navArgs)
         {
             Debug.WriteLine("MainPage::OnNavigatedTo");
+
+            MakePinWebAPICall();
 
             try
             {
@@ -56,6 +59,14 @@ namespace Lesson_201
             {
                 Debug.WriteLine(e.Message);
             }
+        }
+
+        // This will put our pin on the world map of makers
+        // Go to ENTER FINAL LINK HERE to view your pin
+        public void MakePinWebAPICall()
+        {
+            HttpClient client = new HttpClient();
+            client.GetStringAsync("http://adafruitsample.azurewebsites.net/api?Lesson=201");
         }
 
     }
