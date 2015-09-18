@@ -72,8 +72,7 @@ namespace Lesson_201
         // return an eLedState value
         // millisecond value > 5 = eLedState.On
         // anything else = eLedState.off 
-        //const string WebAPIURL = "http://adafruitsample.azurewebsites.net";
-        const string WebAPIURL = "http://10.125.149.194:3000";
+        const string WebAPIURL = "http://adafruitsample.azurewebsites.net/api?Lesson=201";
         public async Task<eLedState> MakeWebApiCall()
         {
             Debug.WriteLine("InternetLed::MakeWebApiCall");
@@ -85,17 +84,11 @@ namespace Lesson_201
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    FormUrlEncodedContent data = new FormUrlEncodedContent(new[]
-                    {
-                        new KeyValuePair<string, string>("Lesson", "201")
-                    });
-                    var response = await client.PostAsync(WebAPIURL, data);
+                    // Make the call
+                    responseString = await client.GetStringAsync(WebAPIURL);
 
-                    response.EnsureSuccessStatusCode();
-
-                    responseString = await response.Content.ReadAsStringAsync();
-
-                    Debug.WriteLine(responseString);
+                    // Let us know what the returned string was
+                    Debug.WriteLine(String.Format("Response string: [{0}]", responseString));
                 }
             }
             catch (Exception e)
@@ -103,6 +96,7 @@ namespace Lesson_201
                 Debug.WriteLine(e.Message);
             }
 
+            // Now we are going to do something with the result so we get a blinking LED
             if (responseString[19] > '5')
             {
                 // If the millisecond part of the string is greater than 5 turn on the led
