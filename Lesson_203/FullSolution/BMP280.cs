@@ -28,7 +28,7 @@ namespace Lesson_203
         public Int16 dig_P9 { get; set; }
     }
 
-    class BMP280
+    public class BMP280
     {
         //The BMP280 register addresses according the the datasheet: http://www.adafruit.com/datasheets/BST-BMP280-DS001-11.pdf
         const byte BMP280_Address = 0x77;
@@ -79,7 +79,7 @@ namespace Lesson_203
         //Create new calibration data for the sensor
         BMP280_CalibrationData CalibrationData;
         //Variable to check if device is initialized
-        bool Init = false;
+        bool init = false;
 
         //Method to initialize the BMP280 sensor
         public async Task Initialize()
@@ -129,7 +129,7 @@ namespace Lesson_203
             }
 
             //Set the initalize variable to true
-            Init = true;
+            init = true;
 
             //Read the coefficients table
             CalibrationData = await ReadCoefficeints();
@@ -160,7 +160,7 @@ namespace Lesson_203
         }
 
         //Method to read a 16-bit value from a register and return it in little endian format
-        UInt16 ReadUInt16_LittleEndian(byte register)
+        private UInt16 ReadUInt16_LittleEndian(byte register)
         {
             UInt16 value = 0;
             byte[] writeBuffer = new byte[] { 0x00 };
@@ -176,7 +176,7 @@ namespace Lesson_203
         }
 
         //Method to read an 8-bit value from a register
-        byte ReadByte(byte register)
+        private byte ReadByte(byte register)
         {
             byte value = 0;
             byte[] writeBuffer = new byte[] { 0x00 };
@@ -219,7 +219,7 @@ namespace Lesson_203
         //t_fine carries fine temperature as global value
         Int32 t_fine = Int32.MinValue;
         //Method to return the temperature in DegC. Resolution is 0.01 DegC. Output value of “5123” equals 51.23 DegC.
-        double BMP280_compensate_T_double(Int32 adc_T)
+        private double BMP280_compensate_T_double(Int32 adc_T)
         {
             double var1, var2, T;
 
@@ -236,7 +236,7 @@ namespace Lesson_203
 
         //Method to returns the pressure in Pa, in Q24.8 format (24 integer bits and 8 fractional bits).
         //Output value of “24674867” represents 24674867/256 = 96386.2 Pa = 963.862 hPa
-        Int64 BMP280_compensate_P_Int64(Int32 adc_P)
+        private Int64 BMP280_compensate_P_Int64(Int32 adc_P)
         {
             Int64 var1, var2, p;
 
@@ -252,7 +252,8 @@ namespace Lesson_203
                 Debug.WriteLine("BMP280_compensate_P_Int64 Jump out to avoid / 0");
                 return 0; //Avoid exception caused by division by zero
             }
-            p = 1048576 - adc_P;
+            //Perform calibration operations as per datasheet
+            p = 1048576 - adc_P; 
             p = (((p << 31) - var2) * 3125) / var1;
             var1 = ((Int64)CalibrationData.dig_P9 * (p >> 13) * (p >> 13)) >> 25;
             var2 = ((Int64)CalibrationData.dig_P8 * p) >> 19;
@@ -264,7 +265,7 @@ namespace Lesson_203
         public async Task<float> ReadTemperature()
         {
             //Make sure the I2C device is initialized
-            if (!Init) await Begin();
+            if (!init) await Begin();
 
             //Read the MSB, LSB and bits 7:4 (XLSB) of the temperature from the BMP280 registers
             byte tmsb = ReadByte((byte)eRegisters.BMP280_REGISTER_TEMPDATA_MSB);
@@ -284,7 +285,7 @@ namespace Lesson_203
         public async Task<float> ReadPreasure()
         {
             //Make sure the I2C device is initialized
-            if (!Init) await Begin();
+            if (!init) await Begin();
 
             //Read the temperature first to load the t_fine value for compensation
             if (t_fine == Int32.MinValue)
@@ -311,7 +312,7 @@ namespace Lesson_203
         public async Task<float> ReadAltitude(float seaLevel)
         {
             //Make sure the I2C device is initialized
-            if (!Init) await Begin();
+            if (!init) await Begin();
 
             //Read the pressure first
             float pressure = await ReadPreasure();

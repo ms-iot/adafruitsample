@@ -65,7 +65,7 @@ namespace Lesson_203
                 //Create the grouped content to send to the web API
                 FormUrlEncodedContent data = new FormUrlEncodedContent(new[]
                 {
-                    new KeyValuePair<string, string>("Lesson", "202"),
+                    new KeyValuePair<string, string>("Lesson", "203"),
                     new KeyValuePair<string, string>("Temperature", (temp/10).ToString() + " deg C"),
                     new KeyValuePair<string, string>("Pressure", (pressure/10).ToString() + " Pa"),
                     new KeyValuePair<string, string>("Altitude", (altitude/10).ToString() + " m")
