@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
@@ -20,11 +17,14 @@ namespace Lesson_201
         private GpioPin LedControlGPIOPin;
         private int LedControlPin;
 
+        // only used if we don't get a response from the webapi call.
+        private const int DefaultBlinkDelay = 1000; 
+
         // An enumeration to store the state of the led
         public enum eLedState { Off, On };
         private eLedState _LedState;
 
-        public InternetLed(int ledControlPin = 12)
+        public InternetLed(int ledControlPin)
         {
             Debug.WriteLine("InternetLed::New InternetLed");
 
@@ -46,7 +46,6 @@ namespace Lesson_201
             // Get the current pin value
             GpioPinValue startingValue = LedControlGPIOPin.Read();
             _LedState = (startingValue == GpioPinValue.Low) ? eLedState.On : eLedState.Off;
-
         }
 
         // A public property for interacting with the LED from code.
@@ -65,18 +64,25 @@ namespace Lesson_201
             }
         }
 
+        // Change the state of the led from on to off or off to on
+        public void Blink()
+        {
+            if (LedState == eLedState.On)
+            {
+                LedState = eLedState.Off;
+            }
+            else
+            {
+                LedState = eLedState.On;
+            }
+        }
+
         // This will call an exposed web API at the indicated URL
-        // the API will return the current time as a string.
-        // Example return: "2015-08-31T21:56:25.766Z"
-        // This will perform a web API call and then depending on the returned millisecond value
-        // return an eLedState value
-        // millisecond value > 5 = eLedState.On
-        // anything else = eLedState.off 
+        // the API will return a string value to use as the blink delay.
         const string WebAPIURL = "http://adafruitsample.azurewebsites.net/TimeApi";
-        public async Task<eLedState> MakeWebApiCall()
+        public async Task<int> GetBlinkDelayFromWeb()
         {
             Debug.WriteLine("InternetLed::MakeWebApiCall");
-            eLedState computedLedState = eLedState.On;
 
             string responseString = "No response";
 
@@ -96,20 +102,15 @@ namespace Lesson_201
                 Debug.WriteLine(e.Message);
             }
 
-            // Now we are going to do something with the result so we get a blinking LED
-            if (responseString[19] > '5')
+            int delay;
+
+            if (int.TryParse(responseString, out delay) == false)
             {
-                // If the millisecond part of the string is greater than 5 turn on the led
-                computedLedState = eLedState.On;
-            }
-            else
-            {
-                // Otherwise turn it off
-                computedLedState = eLedState.Off;
+                delay = DefaultBlinkDelay;
             }
 
-            // return the computed led state
-            return computedLedState;
+            // return the blink delay
+            return delay;
         }
 
     }

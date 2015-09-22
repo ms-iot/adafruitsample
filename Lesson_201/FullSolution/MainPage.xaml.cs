@@ -40,18 +40,13 @@ namespace Lesson_201
                 // Initialize it for use
                 internetLed.InitalizeLed();
 
-                // Now have it make the web API call and get the led state.
-                InternetLed.eLedState ledState = await internetLed.MakeWebApiCall();
+                // Now have it make the web API call and get the led blink delay
+                int blinkDelay = await internetLed.GetBlinkDelayFromWeb();
 
-                // And finally set the state of the led to that new value.
-                internetLed.LedState = ledState;
-
-                // And for fun do that 100 more times so we can see if things change over time.
                 for (int i = 0; i < 100; i++)
                 {
-                    ledState = await internetLed.MakeWebApiCall();
-                    internetLed.LedState = ledState;
-                    await Task.Delay(100);
+                    internetLed.Blink();
+                    await Task.Delay(blinkDelay);
                 }
 
             }
