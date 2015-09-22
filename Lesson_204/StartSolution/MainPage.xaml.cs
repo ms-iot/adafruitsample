@@ -37,10 +37,6 @@ namespace Lesson_204
         protected override void OnNavigatedTo(NavigationEventArgs navArgs)
         {
             Debug.WriteLine("MainPage::OnNavigatedTo");
-
-            // This will get our pin on the world map showing everyone we are running the sample.
-            MakeWebAPICall();
-
         }
 
         private async void timerCallback(object state)
@@ -88,6 +84,8 @@ namespace Lesson_204
                         break;
                 }
 
+                // Use another method to wrap the speech synthesis functionality.
+
                 // Update the current state for next time.
                 CurrentState = newState;
             }
@@ -102,16 +100,9 @@ namespace Lesson_204
                 Windows.UI.Core.CoreDispatcherPriority.High,
                 async () =>
                 {
+                    // Insert code here
                 }
             );
-        }
-
-        // This will put our pin on the world map of makers
-        // Go to ENTER FINAL LINK HERE to view your pin
-        public void MakeWebAPICall()
-        {
-            HttpClient client = new HttpClient();
-            client.GetStringAsync("http://adafruitsample.azurewebsites.net/api?Lesson=204");
         }
 
     }
