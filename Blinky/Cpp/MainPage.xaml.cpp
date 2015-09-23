@@ -34,7 +34,7 @@ MainPage::MainPage()
 	{
 		timer_ = ref new DispatcherTimer();
 		TimeSpan interval;
-		interval.Duration = 500 * 1000 * 10;
+		interval.Duration = 500 * 1000 * 10; //Converting 500ms to TimeSpan intervals
 		timer_->Interval = interval;
 		timer_->Tick += ref new EventHandler<Object ^>(this, &MainPage::OnTick);
 		timer_->Start();
