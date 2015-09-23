@@ -40,18 +40,13 @@ namespace Lesson_201
                 // Initialize it for use
                 internetLed.InitalizeLed();
 
-                // Now have it make the web API call and get the led state.
-                InternetLed.eLedState ledState = await internetLed.MakeWebApiCall();
+                // Now have it make the web API call and get the led blink delay
+                int blinkDelay = await internetLed.GetBlinkDelayFromWeb();
 
-                // And finally set the state of the led to that new value.
-                internetLed.LedState = ledState;
-
-                // And for fun do that 100 more times so we can see if things change over time.
                 for (int i = 0; i < 100; i++)
                 {
-                    ledState = await internetLed.MakeWebApiCall();
-                    internetLed.LedState = ledState;
-                    await Task.Delay(100);
+                    internetLed.Blink();
+                    await Task.Delay(blinkDelay);
                 }
 
             }
@@ -61,11 +56,19 @@ namespace Lesson_201
             }
         }
 
-        // This will put our pin on the world map of makers
-        // Go to ENTER FINAL LINK HERE to view your pin
+        /// <summary>
+        // This will put your pin on the world map of makers using this lesson.
+        // Microsoft will receive the IP address of your Raspberry Pi2
+        // this will be used to determine the rough geographic location of the device, in 
+        // latitude and longitude.  This information will be stored for use in generating the
+        // pin map showing the location of people who have also run this sample.
+        // This data will not be shared with any outside party.
+        /// </summary>
         public void MakePinWebAPICall()
         {
             HttpClient client = new HttpClient();
+
+            // Comment this line to opt out of the pin map.
             client.GetStringAsync("http://adafruitsample.azurewebsites.net/api?Lesson=201");
         }
 

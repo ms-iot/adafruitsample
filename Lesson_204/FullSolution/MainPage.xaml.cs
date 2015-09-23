@@ -67,10 +67,7 @@ namespace Lesson_204
         protected override void OnNavigatedTo(NavigationEventArgs navArgs)
         {
             Debug.WriteLine("MainPage::OnNavigatedTo");
-
-            // This will get our pin on the world map showing everyone we are running the sample.
-            MakeWebAPICall();
-
+            
             // We will check for light level changes once per second (1000 milliseconds)
             timer = new Timer(timerCallback, this, 0, 1000);
         }
@@ -180,14 +177,5 @@ namespace Lesson_204
                 }
             );
         }
-
-        // This will put our pin on the world map of makers
-        // Go to ENTER FINAL LINK HERE to view your pin
-        public void MakeWebAPICall()
-        {
-            HttpClient client = new HttpClient();
-            client.GetStringAsync("http://adafruitsample.azurewebsites.net/api?Lesson=204");
-        }
-
     }
 }

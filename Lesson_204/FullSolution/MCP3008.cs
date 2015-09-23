@@ -43,13 +43,21 @@ namespace Lesson_204
             {
                 // Setup the SPI bus configuration
                 var settings = new SpiConnectionSettings(SPI_CHIP_SELECT_LINE);
-                settings.ClockFrequency = 3600000;                              // 3.6MHz is the rated speed of the MCP3008 at 5v
+                // 3.6MHz is the rated speed of the MCP3008 at 5v
+                settings.ClockFrequency = 3600000;
                 settings.Mode = SpiMode.Mode0;
 
                 // Ask Windows for the list of SpiDevices
-                string aqs = SpiDevice.GetDeviceSelector();                     /* Get a selector string that will return all SPI controllers on the system */
-                var dis = await DeviceInformation.FindAllAsync(aqs);            /* Find the SPI bus controller devices with our selector string             */
-                mcp3008 = await SpiDevice.FromIdAsync(dis[0].Id, settings);     /* Create an SpiDevice with our bus controller and SPI settings             */
+
+                // Get a selector string that will return all SPI controllers on the system 
+                string aqs = SpiDevice.GetDeviceSelector();
+
+                // Find the SPI bus controller devices with our selector string           
+                var dis = await DeviceInformation.FindAllAsync(aqs);
+
+                // Create an SpiDevice with our bus controller and SPI settings           
+                mcp3008 = await SpiDevice.FromIdAsync(dis[0].Id, settings);
+
                 if (mcp3008 == null)
                 {
                     Debug.WriteLine(
