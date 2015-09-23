@@ -190,10 +190,17 @@ namespace Lesson_204
         /// </summary>
         public void MakePinWebAPICall()
         {
-            HttpClient client = new HttpClient();
+            try
+            {
+                HttpClient client = new HttpClient();
 
-            // Comment this line to opt out of the pin map.
-            client.GetStringAsync("http://adafruitsample.azurewebsites.net/api?Lesson=204");
+                // Comment this line to opt out of the pin map.
+                client.GetStringAsync("http://adafruitsample.azurewebsites.net/api?Lesson=204");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Web call failed: " + e.Message);
+            }
         }
 
     }
