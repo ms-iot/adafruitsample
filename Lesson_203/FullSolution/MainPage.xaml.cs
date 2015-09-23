@@ -50,9 +50,9 @@ namespace Lesson_203
                 //Read 10 samples of the data
                 for(int i = 0; i < 10; i++)
                 {
-                    temp += await BMP280.ReadTemperature();
-                    pressure += await BMP280.ReadPreasure(); 
-                    altitude += await BMP280.ReadAltitude(seaLevelPressure);
+                    temp = await BMP280.ReadTemperature();
+                    pressure = await BMP280.ReadPreasure(); 
+                    altitude = await BMP280.ReadAltitude(seaLevelPressure);
 
                     //Write the values to your debug console
                     Debug.WriteLine("Temperature: " + temp.ToString() + " deg C");
