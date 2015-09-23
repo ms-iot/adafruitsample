@@ -18,7 +18,7 @@ namespace Lesson_201
         private int LedControlPin;
 
         // only used if we don't get a response from the webapi call.
-        private const int DefaultBlinkDelay = 1000; 
+        private const int DefaultBlinkDelay = 1000;
 
         // An enumeration to store the state of the led
         public enum eLedState { Off, On };
@@ -104,7 +104,7 @@ namespace Lesson_201
 
             int delay;
 
-            if (int.TryParse(responseString, out delay) == false)
+            if (!int.TryParse(responseString, out delay))
             {
                 delay = DefaultBlinkDelay;
             }
