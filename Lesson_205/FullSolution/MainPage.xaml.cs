@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Net.Http;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.Devices.Gpio;
@@ -34,9 +33,6 @@ namespace Lesson_205
 
         protected override async void OnNavigatedTo(NavigationEventArgs navArgs)
         {
-            // This will get our pin on the world map showing everyone we are running the sample.
-            MakeWebAPICall();
-
             try
             {
                 //Create a new object for the color sensor class
@@ -100,12 +96,6 @@ namespace Lesson_205
                 //Play the stream
                 audio.Play();
             });
-        }
-
-        public void MakeWebAPICall()
-        {
-            HttpClient client = new HttpClient();
-            client.GetStringAsync("http://adafruitsample.azurewebsites.net/api?Lesson=205");
         }
     }
 }

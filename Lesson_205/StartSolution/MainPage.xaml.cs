@@ -34,9 +34,6 @@ namespace Lesson_205
 
         protected override async void OnNavigatedTo(NavigationEventArgs navArgs)
         {
-            // This will get our pin on the world map showing everyone we are running the sample.
-            MakeWebAPICall();
-
             try
             {
                 //Create a new object for the color sensor class
@@ -100,12 +97,6 @@ namespace Lesson_205
                 //Play the stream
                
             });
-        }
-
-        public void MakeWebAPICall()
-        {
-            HttpClient client = new HttpClient();
-            client.GetStringAsync("http://adafruitsample.azurewebsites.net/api?Lesson=205");
         }
     }
 }
