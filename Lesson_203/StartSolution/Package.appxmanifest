@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="f7e2bfc0-3373-4854-9b63-af94572254b6"
-    Publisher="CN=apdutta"
+    Name="WeatherStation"
+    Publisher="CN=Microsoft"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="f7e2bfc0-3373-4854-9b63-af94572254b6" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Lesson_203</DisplayName>
-    <PublisherDisplayName>apdutta</PublisherDisplayName>
+    <PublisherDisplayName>Microsoft</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

@@ -7,7 +7,7 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="71e3c19c-643f-439e-afa4-ded6c661fa24"
+    Name="WhatColorIsIt"
     Publisher="CN=Microsoft"
     Version="1.0.0.0" />
 
