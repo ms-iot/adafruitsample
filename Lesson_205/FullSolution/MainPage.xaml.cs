@@ -102,12 +102,13 @@ namespace Lesson_205
         }
 
         /// <summary>
-        // This will put your pin on the world map of makers using this lesson.
-        // Microsoft will receive the IP address of your Raspberry Pi2
-        // this will be used to determine the rough geographic location of the device, in 
-        // latitude and longitude.  This information will be stored for use in generating the
-        // pin map showing the location of people who have also run this sample.
-        // This data will not be shared with any outside party.
+        // This method will put your pin on the world map of makers using this lesson.
+        // This uses imprecise location (for example, a location derived from your IP 
+        // address with less precision such as at a city or postal code level). 
+        // No personal information is stored.  It simply
+        // collects the total count and other aggregate information.
+        // http://www.microsoft.com/en-us/privacystatement/default.aspx
+        // Comment out the line below to opt-out
         /// </summary>
         public void MakePinWebAPICall()
         {
