@@ -93,6 +93,7 @@ namespace Lesson_204V2
                 Windows.UI.Core.CoreDispatcherPriority.High,
                 async () =>
                 {
+                    // <Add speech code here>
                 }
             );
         }

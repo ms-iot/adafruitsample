@@ -1,0 +1,3 @@
+[submodule "extern/BusProviders"]
+	path = extern/BusProviders
+	url = https://github.com/ms-iot/BusProviders.git

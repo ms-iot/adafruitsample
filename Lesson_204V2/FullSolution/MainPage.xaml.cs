@@ -36,10 +36,10 @@ namespace Lesson_204V2
         enum eState { unknown, JustRight, TooBright, TooDark};
         eState CurrentState = eState.unknown;
 
-        AdcController adcController;
-        AdcChannel LowPotAdcChannel;
-        AdcChannel HighPotAdcChannel;
-        AdcChannel CdsAdcChannel;
+        private AdcController adcController;
+        private AdcChannel LowPotAdcChannel;
+        private AdcChannel HighPotAdcChannel;
+        private AdcChannel CdsAdcChannel;
         
         // The Windows Speech API interface
         private SpeechSynthesizer synthesizer;

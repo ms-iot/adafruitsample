@@ -105,7 +105,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="Lesson_204_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
@@ -133,7 +132,7 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\dashoe\Downloads\BusProviders-develop\BusProviders-develop\ADC\AdcMcp3008\AdcMcp3008.csproj">
+    <ProjectReference Include="..\..\extern\BusProviders\ADC\AdcMcp3008\AdcMcp3008.csproj">
       <Project>{e187ff50-c31b-4e99-9d3a-355501e90257}</Project>
       <Name>AdcMcp3008</Name>
     </ProjectReference>

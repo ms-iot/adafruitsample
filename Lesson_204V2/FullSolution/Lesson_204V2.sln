@@ -1,11 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lesson_204V2", "Lesson_204V2.csproj", "{C1E13073-C8E5-4C94-A559-15B5C7203BA5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E187FF50-C31B-4E99-9D3A-355501E90257} = {E187FF50-C31B-4E99-9D3A-355501E90257}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdcMcp3008", "C:\Users\dashoe\Downloads\BusProviders-develop\BusProviders-develop\ADC\AdcMcp3008\AdcMcp3008.csproj", "{E187FF50-C31B-4E99-9D3A-355501E90257}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdcMcp3008", "..\..\extern\BusProviders\ADC\AdcMcp3008\AdcMcp3008.csproj", "{E187FF50-C31B-4E99-9D3A-355501E90257}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
