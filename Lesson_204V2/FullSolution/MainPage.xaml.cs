@@ -9,7 +9,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 using Microsoft.IoT.AdcMcp3008;
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace Lesson_204V2
 
@@ -185,7 +184,7 @@ namespace Lesson_204V2
         }
 
         // This will put our pin on the world map of makers
-        // Go to ENTER FINAL LINK HERE to view your pin
+        // Go to http://ms-iot.github.io/content/en-US/win10/samples/BrightOrNot.htm to view your pin
         public void MakeWebAPICall()
         {
             HttpClient client = new HttpClient();

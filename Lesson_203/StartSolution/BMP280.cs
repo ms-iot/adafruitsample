@@ -77,6 +77,7 @@ namespace Lesson_203
         //Create an I2C device
 
         //Create new calibration data for the sensor
+        BMP280_CalibrationData CalibrationData;
 
         //Variable to check if device is initialized
 
