@@ -10,6 +10,13 @@ using Windows.UI.Xaml.Navigation;
 
 using Microsoft.IoT.AdcMcp3008;
 
+/// <summary>
+///  To use this sample you will need to get the busproviders repo.
+///  https://github.com/ms-iot/BusProviders
+///  Then extract / or sync that repo to your local machine.
+///  Put the code from busproviders/adc/adcmcp3008 into ..\..\extern\BusProviders\ADC\AdcMcp3008\
+/// </summary>
+
 namespace Lesson_204V2
 
 {
