@@ -179,7 +179,7 @@ namespace Lesson_205
         };
 
         //Set the default integration time as no gain
-        eTCS34725Gain _tcs34725Gain = eTCS34725Gain.TCS34725_GAIN_1X;
+        eTCS34725Gain _tcs34725Gain = eTCS34725Gain.TCS34725_GAIN_16X;
 
         private async Task begin()
         {
